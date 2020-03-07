@@ -1,0 +1,44 @@
+
+debug: true
+spring:
+  application:
+    name: cinema-gateway
+
+rest:
+  auth-open: true #jwt鉴权机制是否开启(true或者false)
+  sign-open: true #签名机制是否开启(true或false)
+
+jwt:
+  header: Authorization   #http请求头所需要的字段
+  secret: mySecret        #jwt秘钥
+  expiration: 604800      #7天 单位:秒
+  auth-path: auth         #认证请求的路径
+  md5-key: randomKey      #md5加密混淆key
+  ignore-url: /register , /check #忽略列表
+
+server:
+  port: 11017
+
+# dubbo 配置项，对应 DubboConfigurationProperties 配置类
+dubbo:
+  application:
+    name: cinema-gateway # 应用名
+  # Dubbo 注册中心配
+  registry:
+    address: zookeeper://127.0.0.1:2181 # 注册中心地址。多个注册中心，可见 http://dubbo.apache.org/zh-cn/docs/user/references/registry/introduction.html 文档。
+  # Dubbo 服务提供者协议配置
+  protocol:
+    port: -1 # 协议端口。使用 -1 表示随机端口。
+    name: dubbo # 使用 `dubbo://` 协议。更多协议，可见 http://dubbo.apache.org/zh-cn/docs/user/references/protocol/introduction.html 文档
+  # Dubbo 服务提供者配置
+  provider:
+    timeout: 1000 # 【重要】远程服务调用超时时间，单位：毫秒。默认为 1000 毫秒，胖友可以根据自己业务修改
+#    filter: -exception # 去掉 ExceptionFilter
+    UserRpcService: # 自定义
+      version: 1.0.0
+
+#  推荐使用xml配置
+#  scan:
+#    base-packages: com.sikiapp.provider.service # 配置扫描的基础路径，扫描使用了Dubbo 自定义的@Service 注解的Service 类
+
+

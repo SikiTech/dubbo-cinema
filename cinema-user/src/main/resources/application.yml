@@ -1,0 +1,61 @@
+debug: true
+spring:
+  application:
+    name: cinema-user
+
+# 数据源配置
+  datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      hikari:
+          auto-commit: true
+          connection-test-query: SELECT 1
+          connection-timeout: 30000
+          idle-timeout: 30000
+          max-lifetime: 1800000
+          maximum-pool-size: 15
+          minimum-idle: 5
+          pool-name: DatebookHikariCP
+      password: sj2802
+      type: com.zaxxer.hikari.HikariDataSource
+      url: jdbc:mysql://localhost:3306/dubbo-cinema?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true&useSSL=false
+      username: root
+  # 环境
+  profiles:
+    active: dev
+
+# 端口
+server:
+  port: 11016
+
+
+# dubbo 配置项，对应 DubboConfigurationProperties 配置类
+dubbo:
+  # Dubbo 应用配置
+  application:
+    name: cinema-user # 应用名
+  # Dubbo 注册中心配
+  registry:
+    address: zookeeper://127.0.0.1:2181 # 注册中心地址。多个注册中心，可见 http://dubbo.apache.org/zh-cn/docs/user/references/registry/introduction.html 文档。
+  # Dubbo 服务提供者协议配置
+  protocol:
+    port: -1 # 协议端口。使用 -1 表示随机端口。
+    name: dubbo # 使用 `dubbo://` 协议。更多协议，可见 http://dubbo.apache.org/zh-cn/docs/user/references/protocol/introduction.html 文档
+  # Dubbo 服务提供者配置
+  provider:
+    timeout: 1000 # 【重要】远程服务调用超时时间，单位：毫秒。默认为 1000 毫秒，胖友可以根据自己业务修改
+#    filter: -exception # 去掉 ExceptionFilter
+    UserRpcService: # 自定义
+      version: 1.0.0
+
+#  推荐使用xml配置
+#  scan:
+#    base-packages: com.sikiapp.provider.service # 配置扫描的基础路径，扫描使用了Dubbo 自定义的@Service 注解的Service 类
+
+
+# mybatis-plus
+mybatis-plus:
+    configuration:
+        default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
+    mapper-locations: classpath:mybatis/mapper/*.xml
+    type-aliases-package: com.sikiapp.user.entity
+    type-enums-package: com.sikiapp.user.enums
